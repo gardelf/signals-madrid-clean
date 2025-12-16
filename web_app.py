@@ -52,18 +52,15 @@ def index():
 
 @app.route('/api/signals')
 def get_signals():
-    """API para obtener las señales desde Google Sheets"""
+    """API para obtener las señales desde JSON"""
     try:
-        from sheets_writer import get_signals_from_sheet
-        signals = get_signals_from_sheet()
-        
-        # Fallback a JSON si Google Sheets falla
-        if not signals and os.path.exists(DATA_FILE):
+        if os.path.exists(DATA_FILE):
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 signals = data.get('senales', [])
                 last_exec = data.get('fecha_generacion', 'N/A')
         else:
+            signals = []
             last_exec = LAST_EXECUTION or 'N/A'
         
         return jsonify({
@@ -73,7 +70,7 @@ def get_signals():
             'last_execution': last_exec
         })
     except Exception as e:
-        print(f"Error en /api/signals: {e}")
+        print(f"Error en /api/signals: {e}", flush=True)
         return jsonify({'success': False, 'error': str(e), 'signals': [], 'total': 0})
 
 @app.route('/regenerate', methods=['POST'])

@@ -54,12 +54,18 @@ def index():
 def get_signals():
     """API para obtener las señales desde JSON"""
     try:
+        print(f"\n[DEBUG] Buscando archivo: {DATA_FILE}", flush=True)
+        print(f"[DEBUG] Archivo existe: {os.path.exists(DATA_FILE)}", flush=True)
+        
         if os.path.exists(DATA_FILE):
+            print(f"[DEBUG] Leyendo archivo...", flush=True)
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 signals = data.get('senales', [])
                 last_exec = data.get('fecha_generacion', 'N/A')
+            print(f"[DEBUG] Señales leídas: {len(signals)}", flush=True)
         else:
+            print(f"[DEBUG] Archivo NO existe", flush=True)
             signals = []
             last_exec = LAST_EXECUTION or 'N/A'
         
@@ -70,7 +76,9 @@ def get_signals():
             'last_execution': last_exec
         })
     except Exception as e:
-        print(f"Error en /api/signals: {e}", flush=True)
+        print(f"[ERROR] Error en /api/signals: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
         return jsonify({'success': False, 'error': str(e), 'signals': [], 'total': 0})
 
 @app.route('/regenerate', methods=['POST'])

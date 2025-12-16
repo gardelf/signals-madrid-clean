@@ -52,22 +52,22 @@ def index():
 
 @app.route('/api/signals')
 def get_signals():
-    """API para obtener las señales desde JSON"""
+    """API para obtener las señales desde Google Sheets"""
     try:
-        print(f"\n[DEBUG] Buscando archivo: {DATA_FILE}", flush=True)
-        print(f"[DEBUG] Archivo existe: {os.path.exists(DATA_FILE)}", flush=True)
+        print(f"\n[DEBUG] Leyendo desde Google Sheets...", flush=True)
+        from sheets_writer import get_signals_from_sheet
+        signals = get_signals_from_sheet()
+        print(f"[DEBUG] Señales leídas: {len(signals)}", flush=True)
         
+        # Intentar obtener fecha de última ejecución desde JSON si existe
+        last_exec = LAST_EXECUTION or 'N/A'
         if os.path.exists(DATA_FILE):
-            print(f"[DEBUG] Leyendo archivo...", flush=True)
-            with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                signals = data.get('senales', [])
-                last_exec = data.get('fecha_generacion', 'N/A')
-            print(f"[DEBUG] Señales leídas: {len(signals)}", flush=True)
-        else:
-            print(f"[DEBUG] Archivo NO existe", flush=True)
-            signals = []
-            last_exec = LAST_EXECUTION or 'N/A'
+            try:
+                with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    last_exec = data.get('fecha_generacion', last_exec)
+            except:
+                pass
         
         return jsonify({
             'success': True,

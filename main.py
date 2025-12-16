@@ -9,7 +9,7 @@ from datetime import datetime
 from google_search import search_google
 from processors import process_signal
 from classifiers import classify_priority
-# from sheets_writer import write_signals_to_sheet  # Deshabilitado temporalmente
+from sheets_writer import write_signals_to_sheet
 
 # Configuración
 OUTPUT_FILE = '/app/signals_today.json'
@@ -46,7 +46,10 @@ def main():
                 all_signals.append(signal)
                 print(f"  ✅ {signal['titulo'][:50]}... [{signal['prioridad']}]")
     
-    # Guardar en JSON
+    # Guardar en Google Sheets
+    write_signals_to_sheet(all_signals)
+    
+    # También guardar en JSON como backup
     output_data = {
         'fecha_generacion': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'total_senales': len(all_signals),

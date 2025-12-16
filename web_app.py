@@ -13,11 +13,29 @@ def run_motor():
     """Ejecuta el motor de captación"""
     global LAST_EXECUTION
     try:
+        import sys
+        import traceback
         from main import main as motor_main
+        
+        print("\n" + "="*50)
+        print("🚀 INICIANDO MOTOR DE SEÑALES")
+        print("="*50)
+        
         motor_main()
         LAST_EXECUTION = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        print("\n" + "="*50)
+        print("✅ MOTOR COMPLETADO")
+        print("="*50 + "\n")
+        
     except Exception as e:
-        print(f"Error ejecutando motor: {e}")
+        print("\n" + "="*50)
+        print("❌ ERROR EN MOTOR DE SEÑALES")
+        print("="*50)
+        print(f"Error: {e}")
+        print("\nTraceback completo:")
+        traceback.print_exc()
+        print("="*50 + "\n")
 
 @app.route('/')
 def index():

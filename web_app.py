@@ -17,25 +17,33 @@ def run_motor():
         import traceback
         from main import main as motor_main
         
-        print("\n" + "="*50)
-        print("🚀 INICIANDO MOTOR DE SEÑALES")
-        print("="*50)
+        # Forzar unbuffered output
+        sys.stdout.flush()
+        sys.stderr.flush()
+        
+        print("\n" + "="*50, flush=True)
+        print("🚀 INICIANDO MOTOR DE SEÑALES", flush=True)
+        print("="*50, flush=True)
+        sys.stdout.flush()
         
         motor_main()
         LAST_EXECUTION = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        print("\n" + "="*50)
-        print("✅ MOTOR COMPLETADO")
-        print("="*50 + "\n")
+        print("\n" + "="*50, flush=True)
+        print("✅ MOTOR COMPLETADO", flush=True)
+        print("="*50 + "\n", flush=True)
+        sys.stdout.flush()
         
     except Exception as e:
-        print("\n" + "="*50)
-        print("❌ ERROR EN MOTOR DE SEÑALES")
-        print("="*50)
-        print(f"Error: {e}")
-        print("\nTraceback completo:")
+        print("\n" + "="*50, flush=True)
+        print("❌ ERROR EN MOTOR DE SEÑALES", flush=True)
+        print("="*50, flush=True)
+        print(f"Error: {e}", flush=True)
+        print("\nTraceback completo:", flush=True)
         traceback.print_exc()
-        print("="*50 + "\n")
+        print("="*50 + "\n", flush=True)
+        sys.stdout.flush()
+        sys.stderr.flush()
 
 @app.route('/')
 def index():
